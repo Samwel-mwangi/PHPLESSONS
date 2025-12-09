@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 if (isset($_POST['submit'])) {
 
@@ -14,125 +13,56 @@ if (isset($_POST['submit'])) {
     $connection = mysqli_connect('localhost', 'root', '', 'loginapp');
 
     if (!$connection) {
-        die("Database connection failed");
+        die("Database connection failed: " . mysqli_connect_error());
     } else {
         echo "We are connected<br>";
     }
 
-    // Insert query
-    $query = "INSERT INTO users(username, password) ";
-    $query .= "VALUES ('$username', '$password')";
+    // Optional: hash the password for security
+    //$password = password_hash($password, PASSWORD_BCRYPT);
 
-    $result = mysqli_query($connection, $query);
+    // Insert query (use prepared statements to prevent SQL injection)
+    $stmt = mysqli_prepare($connection, "INSERT INTO users(username, password) VALUES (?, ?)");
+    mysqli_stmt_bind_param($stmt, "ss", $username, $password);
 
-    if (!$result) {
-        die('Query failed');
-    } else {
+    if (mysqli_stmt_execute($stmt)) {
         echo "User created successfully!";
+    } else {
+        die("Query failed: " . mysqli_error($connection));
     }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($connection);
 }
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>User Registration</title>
     
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
+<div class="container">
+    <div class="col-sm-6">
+        <form action="" method="post">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" class="form-control">
+            </div>
 
-        <div class="col-sm-6">
-            <form action="login.php" method="post">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" class="form-control">
-                </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control">
+            </div>
 
-                 <div class="form-group">
-                     <label for="password">Password</label>
-                    <input type="password" name="password" class="form-control">
-                </div>
-                <input class="btn btn-primary" type="submit" name="submit" value="Submit">
-            </form>
-        </div>
+            <input class="btn btn-primary" type="submit" name="submit" value="Submit">
+        </form>
     </div>
+</div>
 </body>
-=======
-<?php
-if (isset($_POST['submit'])) {
-
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    if (empty($username) || empty($password)) {
-        echo "Fields can't be blank";
-        exit;
-    }
-
-    // Database connection
-    $connection = mysqli_connect('localhost', 'root', '', 'loginapp');
-
-    if (!$connection) {
-        die("Database connection failed");
-    } else {
-        echo "We are connected<br>";
-    }
-
-    // Insert query
-    $query = "INSERT INTO users(username, password) ";
-    $query .= "VALUES ('$username', '$password')";
-
-    $result = mysqli_query($connection, $query);
-
-    if (!$result) {
-        die('Query failed');
-    } else {
-        echo "User created successfully!";
-    }
-}
-?>
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-
-        <div class="col-sm-6">
-            <form action="login.php" method="post">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" class="form-control">
-                </div>
-
-                 <div class="form-group">
-                     <label for="password">Password</label>
-                    <input type="password" name="password" class="form-control">
-                </div>
-                <input class="btn btn-primary" type="submit" name="submit" value="Submit">
-            </form>
-        </div>
-    </div>
-</body>
->>>>>>> f0bee98c86cd7a0c9543a786fbe23e1c8d9576d7
 </html>
