@@ -1,39 +1,8 @@
 <?php
-if (isset($_POST['submit'])) {
+include "db.php";
+include "functions.php";
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    if (empty($username) || empty($password)) {
-        echo "Fields can't be blank";
-        exit;
-    }
-
-    // Database connection
-    $connection = mysqli_connect('localhost', 'root', '', 'loginapp');
-
-    if (!$connection) {
-        die("Database connection failed: " . mysqli_connect_error());
-    } else {
-        echo "We are connected<br>";
-    }
-
-    // Optional: hash the password for security
-    //$password = password_hash($password, PASSWORD_BCRYPT);
-
-    // Insert query (use prepared statements to prevent SQL injection)
-    $stmt = mysqli_prepare($connection, "INSERT INTO users(username, password) VALUES (?, ?)");
-    mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-
-    if (mysqli_stmt_execute($stmt)) {
-        echo "User created successfully!";
-    } else {
-        die("Query failed: " . mysqli_error($connection));
-    }
-
-    mysqli_stmt_close($stmt);
-    mysqli_close($connection);
-}
+createRows();
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +18,7 @@ if (isset($_POST['submit'])) {
 <body>
 <div class="container">
     <div class="col-sm-6">
+        <h1 class="textcenter">Create</h1>
         <form action="" method="post">
             <div class="form-group">
                 <label for="username">Username</label>
@@ -60,7 +30,7 @@ if (isset($_POST['submit'])) {
                 <input type="password" name="password" class="form-control">
             </div>
 
-            <input class="btn btn-primary" type="submit" name="submit" value="Submit">
+            <input class="btn btn-primary" type="submit" name="submit" value="Create">
         </form>
     </div>
 </div>

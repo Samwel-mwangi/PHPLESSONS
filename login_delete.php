@@ -18,6 +18,7 @@ if(isset($_POST['submit'])){
 <body>
     <div class="container">
         <div class="col-sm-6">
+            <h1 class="text-center">Delete User</h1>
            <form action="login_delete.php" method="post">
                 <div class="form-group">
                     <label for="username">Username</label>
